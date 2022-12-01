@@ -16,10 +16,12 @@ from sections.confirmation import Confirmation
 from sections.intro_section import IntroSection
 from sections.notification import Notification
 from sections.menu_section import MenuSection
+from sections.hunt_section import HuntSection
 
 
 INTRO_SECTION = "introSection"
 MENU_SECTION = "menuSection"
+HUNT_SECTION = "huntSection"
 
 class Game(Engine):
     def __init__(self, teminal_width: int, terminal_height: int):
@@ -47,6 +49,7 @@ class Game(Engine):
     def setup_effects(self):
         super().setup_effects()
         self.intro_end_effect = MeltWipeEffect(self, 0, 0, self.screen_width, self.screen_height, MeltWipeEffectType.RANDOM, 20)
+        self.start_stage_effect = MeltWipeEffect(self, 0, 0, self.screen_width, self.screen_height, MeltWipeEffectType.RANDOM, 20)
 
     #*********************************************
     # Sections
@@ -63,6 +66,7 @@ class Game(Engine):
         self.menu_sections[MENU_SECTION] = MenuSection(self,0,0,self.screen_width, self.screen_height, MENU_SECTION)
 
         self.game_sections = OrderedDict()
+        self.game_sections[HUNT_SECTION] = HuntSection(self,0,0,self.screen_width, self.screen_height, HUNT_SECTION)
   
         self.misc_sections = OrderedDict()
         self.misc_sections[NOTIFICATION_DIALOG] = Notification(self, 0,0, self.screen_width, self.screen_height, NOTIFICATION_DIALOG)
@@ -80,4 +84,20 @@ class Game(Engine):
     def end_intro(self):
         super().end_intro()
         self.set_full_screen_effect(self.intro_end_effect)
+        self.start_full_screen_effect()
+
+    def close_all_game_sections(self):
+        self.disable_section(self.game_sections[HUNT_SECTION])
+        
+        self.game_sections[HUNT_SECTION].close()
+
+    def start_stage(self, stage):
+        self.state = GameState.IN_GAME
+
+        self.close_all_game_sections()
+
+        self.enable_section(stage)
+        self.game_sections[stage].open()
+
+        self.set_full_screen_effect(self.start_stage_effect)
         self.start_full_screen_effect()
