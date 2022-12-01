@@ -29,7 +29,7 @@ class ButtonStruct(NamedTuple):
     decoration: list
 
 menu_section_layout = {
-    "start_button": ButtonStruct(text="Start",x=10,y=10,width=7,height=3,bg=black,fg=white,font_fg=grey,h_fg=pink,font_bg=white,decoration=button_box_decoration)
+    "start_button": ButtonStruct(text="Start",x=22,y=25,width=7,height=3,bg=black,fg=white,font_fg=grey,h_fg=pink,font_bg=white,decoration=button_box_decoration)
 }
 
 confirmation_dialog_info = {
