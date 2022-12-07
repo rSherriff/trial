@@ -18,12 +18,8 @@ from sections.notification import Notification
 from sections.menu_section import MenuSection
 from sections.hunt_section import HuntSection
 from sections.title_section import TitleSection
-
-
-INTRO_SECTION = "introSection"
-MENU_SECTION = "menuSection"
-HUNT_SECTION = "huntSection"
-TITLE_SECTION = "titleSection"
+from sections.section_layouts import INTRO_SECTION,MENU_SECTION,HUNT_SECTION,TITLE_SECTION
+from game_data.game_structure import stages
 
 class Game(Engine):
     def __init__(self, teminal_width: int, terminal_height: int):
@@ -101,8 +97,8 @@ class Game(Engine):
 
         self.close_all_game_sections()
 
-        self.enable_section(stage)
-        self.game_sections[stage].open()
+        self.enable_section(TITLE_SECTION)
+        self.game_sections[TITLE_SECTION].open(stages[stage])
 
         self.set_full_screen_effect(self.start_stage_effect)
         self.start_full_screen_effect()

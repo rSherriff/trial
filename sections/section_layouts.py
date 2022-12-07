@@ -1,5 +1,10 @@
 from typing import NamedTuple
 
+INTRO_SECTION = "introSection"
+MENU_SECTION = "menuSection"
+HUNT_SECTION = "huntSection"
+TITLE_SECTION = "titleSection"
+
 SCREEN_WIDTH = 51
 SCREEN_HEIGHT = 30
 
@@ -75,6 +80,6 @@ notification_dialog_info = {
 }
 
 title_section_info = {
-    "title" : Position(1, 5),
+    "title" : Rect(1, 3, SCREEN_WIDTH - 2, 1),
     "main_text":Rect(int(SCREEN_WIDTH*0.1), int(SCREEN_HEIGHT*0.25), int(SCREEN_WIDTH*0.8), int(SCREEN_HEIGHT*0.5))
 }

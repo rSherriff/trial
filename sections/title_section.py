@@ -1,3 +1,4 @@
+import tcod
 from sections.section import Section
 from dialog import Dialog
 from sections.section_layouts import title_section_info
@@ -13,11 +14,13 @@ class TitleSection(Section):
     
     def render(self, console):
         super().render(console)
+        title_rect = title_section_info["title"]
+        console.print_box(title_rect.x, title_rect.y, title_rect.width, title_rect.height, self.title, alignment=tcod.CENTER)
         self.dialog.render(console)
 
-    def open(self, title, text):
-        self.title = title
-        self.text = text
+    def open(self, stage):
+        self.title = stage["title"]
+        self.text = stage["text"]
         self.dialog.start_character_talking(self.text)
 
     def refresh(self):
