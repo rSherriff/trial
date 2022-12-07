@@ -20,6 +20,7 @@ from sections.confirmation import Confirmation
 from sections.intro_section import IntroSection
 from sections.notification import Notification
 from utils.delta_time import DeltaTime
+from game_data.game_structure import intro_splashes
 
 
 class GameState(Enum):
@@ -67,13 +68,8 @@ class Engine(abc.ABC):
 
         self.in_stage_music_queue = False
         self.playing_menu_music = False
-
-        with open ( "game_data/levels.json" ) as f:
-            data = json.load(f)
-
-            self.intro_sections["introSection"].load_splashes(data["intro_splashes"])
-
-            self.load_initial_data(data)
+        
+        self.intro_sections["introSection"].load_splashes(intro_splashes)
             
     def create_new_save_data(self):
         self.save_data = dict()
