@@ -1,5 +1,7 @@
-
 from typing import NamedTuple
+
+SCREEN_WIDTH = 51
+SCREEN_HEIGHT = 30
 
 dialog_box_decoration =  chr(198) + chr(9608) + chr(201) + chr(9608)+ " "+ chr(9608) + chr(244)+ chr(9608)+ chr(230)
 dialog_box_decoration_filled =  chr(198) + chr(9608) + chr(201) + chr(9608)+ chr(9608)+ chr(9608) + chr(244)+ chr(9608)+ chr(230)
@@ -15,7 +17,17 @@ red=(255,0,0)
 
 main_background = (23,18,25)
 
-class ButtonStruct(NamedTuple):
+class Rect(NamedTuple):
+    x : int
+    y : int
+    width : int
+    height : int
+
+class Position(NamedTuple):
+    x : int
+    y : int
+
+class Button(NamedTuple):
     text : str
     x : int
     y : int
@@ -29,7 +41,7 @@ class ButtonStruct(NamedTuple):
     decoration: list
 
 menu_section_layout = {
-    "start_button": ButtonStruct(text="Start",x=22,y=25,width=7,height=3,bg=black,fg=white,font_fg=grey,h_fg=pink,font_bg=white,decoration=button_box_decoration)
+    "start_button": Button(text="Start",x=22,y=25,width=7,height=3,bg=black,fg=white,font_fg=grey,h_fg=pink,font_bg=white,decoration=button_box_decoration)
 }
 
 confirmation_dialog_info = {
@@ -60,4 +72,9 @@ notification_dialog_info = {
     "max_width" : 40,
     "button_width" : 7,
     "button_height": 3
+}
+
+title_section_info = {
+    "title" : Position(1, 5),
+    "main_text":Rect(int(SCREEN_WIDTH*0.1), int(SCREEN_HEIGHT*0.25), int(SCREEN_WIDTH*0.8), int(SCREEN_HEIGHT*0.5))
 }

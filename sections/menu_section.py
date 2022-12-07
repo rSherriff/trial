@@ -12,7 +12,7 @@ from actions.actions import EscapeAction
 from effects.horizontal_wipe_effect import (HorizontalWipeDirection,
                                             HorizontalWipeEffect)
 from sections.section import Section
-from sections.section_layouts import ButtonStruct, menu_section_layout
+from sections.section_layouts import menu_section_layout
 from ui.menu_ui import MenuUI
 
 

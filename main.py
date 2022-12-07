@@ -7,9 +7,12 @@ import tcod
 from application_path import get_app_path
 from game import Game
 
+from dialog import Dialog
+from sections.section_layouts import SCREEN_WIDTH, SCREEN_HEIGHT
+
 def main() -> None:
-    screen_width = 51
-    screen_height = 30
+    screen_width = SCREEN_WIDTH
+    screen_height = SCREEN_HEIGHT
 
     terminal_height = screen_height * 2
     terminal_width = screen_width * 2

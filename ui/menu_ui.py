@@ -9,7 +9,7 @@ class MenuUI(UI):
         super().__init__(section)
 
         bs = menu_section_layout["start_button"]
-        self.start_button = Button(bs.x,bs.y,bs.width,bs.height, click_action=JumpToStageAction(self.section.engine,"huntSection"), h_fg=bs.h_fg)
+        self.start_button = Button(bs.x,bs.y,bs.width,bs.height, click_action=JumpToStageAction(self.section.engine,"titleSection"), h_fg=bs.h_fg)
         self.elements.append(self.start_button)
 
 """
