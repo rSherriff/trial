@@ -28,15 +28,15 @@ class Dialog():
     def start_character_talking(self, text):
         self.reset_talking()
 
-        self.text = text
-        self.analyse_text()
-        self.aligned_lines = self.align_justified(self.text)
+        self.analyse_text(text)
+        for i in range(0,len(self.text)):
+            self.text[i] = self.align_justified(self.text[i])
         self.change_state(DialogState.DIALOG)
 
     def reset_talking(self):
         self.text = ""
+        self.total_text_length = 0
         self.text_effects = list()
-        self.text_length = 0
         self.current_dialog_index = 1
 
     def end_talking(self):
@@ -48,19 +48,44 @@ class Dialog():
             self.dialog_tick_loop()
 
     def render(self, console):
-        current_line = int(self.get_current_dialog_index() / self.rect.width)
-        for i in range(0,current_line):
-            console.print(self.rect.x, self.rect.y + i, self.aligned_lines[i], fg=(255,255,255), bg=(0,0,0))
+        drawn_lines = 0
 
-        if current_line < len(self.aligned_lines):
-            current_character = self.get_current_dialog_index() % self.rect.width
-            console.print(self.rect.x, self.rect.y + current_line, self.aligned_lines[current_line][:current_character], fg=(255,255,255), bg=(0,0,0))
+        # Figure out what paragraph we are in
+        paragraph_length_count = 0
+        paragraph_index = 0
+        for paragraph_tuple in self.text:
+            paragraph_length_count += paragraph_tuple[0]
+            if self.get_current_dialog_index() < paragraph_length_count:
+                break
+            paragraph_index += 1
+
+        # print all completed paragraph
+        line_y = self.rect.y
+        for i in range(0, paragraph_index):
+            for j in range(0, len(self.text[i][1])):
+                console.print(self.rect.x, line_y, self.text[i][1][j], fg=(255,255,255), bg=(0,0,0))
+                drawn_lines += 1
+                line_y += 1
+            line_y += 2
+
+        current_line = int((self.get_current_dialog_index() ) / self.rect.width) - drawn_lines
+
+        # Print up to the current line in the current paragraph
+        for i in range(0,current_line):
+            console.print(self.rect.x, line_y, self.text[paragraph_index][1][i], fg=(255,255,255), bg=(0,0,0))
+            line_y += 1
+
+        # Print up to the current character in the current line in the current paragraph
+        if paragraph_index < len(self.text):
+            if current_line < len(self.text[paragraph_index][1]):
+                current_character = self.get_current_dialog_index() % self.rect.width
+                console.print(self.rect.x, line_y, self.text[paragraph_index][1][current_line][:current_character], fg=(255,255,255), bg=(0,0,0))
 
     def dialog_tick_loop(self):
         self.current_pause += self.section.engine.get_delta_time()
         self.current_pause = min(self.current_pause, 0)
         if self.current_pause >= 0:
-            diff =  self.section.engine.get_delta_time() * 30
+            diff =  self.section.engine.get_delta_time() * 50
             if len(self.text_effects) >0:
                 if self.text_effects[0]["type"] == TextEffects.PAUSE:  
                     if self.current_dialog_index + diff >= self.text_effects[0]["index"]:  
@@ -72,7 +97,7 @@ class Dialog():
             else:
                 self.current_dialog_index += diff  
 
-        if self.current_dialog_index > self.text_length:          
+        if self.current_dialog_index > self.total_text_length:          
             self.change_state(DialogState.FINISHED)
 
     def get_current_dialog_index(self):
@@ -81,8 +106,8 @@ class Dialog():
     def change_state(self, new_state):
         self.state = new_state
 
-    def analyse_text(self):
-        split_text = self.text.split('#')
+    def analyse_text(self, text):
+        split_text = text.split('#')
         final_text = ""
         for t in split_text:
             if t.startswith("pause="):
@@ -91,7 +116,7 @@ class Dialog():
             else:
                 final_text += t
 
-        self.text = final_text
+        self.text = final_text.split('\n')
 
     def align_justified(self, text: str) -> list[str]:
         # Create an empty list to store the lines of text
@@ -103,6 +128,7 @@ class Dialog():
         # Keep track of the current line and current width
         current_line = []
         current_width = 0
+        paragraph_length = 0
 
         # Loop through the words in the text
         for word in words:
@@ -129,7 +155,7 @@ class Dialog():
 
         # Justify the lines by adding spaces between the words
         justified_lines = []
-        for line in lines[0:-1]:
+        for line in lines:
             # Calculate the number of spaces to add between the words
             num_spaces = self.rect.width - sum(len(word) for word in line)
             num_intervals = len(line) - 1
@@ -147,17 +173,18 @@ class Dialog():
                     if num_spaces % num_intervals > 0:
                         justified_line += " "
                         num_spaces -= 1
-            self.text_length += len(justified_line)
+            paragraph_length += len(justified_line)
             justified_lines.append(justified_line)
 
-        final_line = ""
-        for i, word in enumerate(lines[-1]):
-            final_line += word
-            if i < len(lines[-1]) -1:
-                final_line += " "
+        #final_line = ""
+        #for i, word in enumerate(lines[-1]):
+            #final_line += word
+            #if i < len(lines[-1]) -1:
+                #final_line += " "
             
-        self.text_length += len(final_line)
-        justified_lines.append(final_line)
+        #paragraph_length += len(final_line)
+        self.total_text_length += paragraph_length
+        #justified_lines.append(final_line)
 
         """
         # If the height of the box is less than the number of lines,
@@ -170,5 +197,5 @@ class Dialog():
             return justified_lines
         """
 
-        return justified_lines
+        return (paragraph_length, justified_lines)
     
