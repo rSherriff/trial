@@ -28,9 +28,8 @@ class Dialog():
     def start_character_talking(self, text):
         self.reset_talking()
 
-        self.analyse_text(text)
-        for i in range(0,len(self.text)):
-            self.text[i] = self.align_justified(self.text[i])
+        self.text = list()
+        self.align_justified(text)
         self.change_state(DialogState.DIALOG)
 
     def reset_talking(self):
@@ -116,86 +115,118 @@ class Dialog():
             else:
                 final_text += t
 
-        self.text = final_text.split('\n')
-
     def align_justified(self, text: str) -> list[str]:
-        # Create an empty list to store the lines of text
-        lines = []
+        
+        # Split the text into paragraphs
+        text = text.split('\n')
 
-        # Split the text into words
-        words = text.split()
 
-        # Keep track of the current line and current width
-        current_line = []
-        current_width = 0
-        paragraph_length = 0
+        for i in range(0,len(text)):
 
-        # Loop through the words in the text
-        for word in words:
-            # If the current line is empty, add the word to the line
-            if current_line == []:
-                current_line = [word]
-                current_width = len(word)
-            # If the current line is not empty and the word fits on the current line
-            elif current_width + 1 + len(word) <= self.rect.width:
-                # Add the word to the line, with a space between the words
-                current_line.append(word)
-                current_width += 1 + len(word)
-            # If the word does not fit on the current line
+            paragraph = text[i]
+
+            # Create an empty list to store the lines of text
+            lines = []
+
+            # Split the text into words
+            words = paragraph.split()
+
+            # Keep track of some things
+            current_line = []
+            current_width = 0
+            paragraph_length = 0
+            equivalent_index = self.total_text_length
+
+            effects = list()
+
+            # Loop through the words in the text
+            for word in words:
+
+                if word.startswith("#pause="):
+                    value = word[len("#pause="):]
+                    self.text_effects.append({"type":TextEffects.PAUSE,"index":equivalent_index-1, "length":float(value)})
+                    print(self.text_effects[-1])
+                    effects.append((len(lines), equivalent_index%self.rect.width))
+                    continue
+
+                # If the current line is empty, add the word to the line
+                if current_line == []:
+                    current_line = [word]
+                    current_width = len(word)
+                # If the current line is not empty and the word fits on the current line
+                elif current_width + 1 + len(word) <= self.rect.width:
+                    # Add the word to the line, with a space between the words
+                    current_line.append(word)
+                    current_width += 1 + len(word)
+                # If the word does not fit on the current line
+                else:
+                    # Add the current line to the list of lines
+                    lines.append(current_line)
+                    equivalent_index += sum(len(s) for s in current_line)
+
+                    # Start a new line with the current word
+                    current_line = [word]
+                    current_width = len(word)
+
+            # Add the final line to the list of lines
+            lines.append(current_line)
+            equivalent_index += sum(len(s) for s in current_line)
+
+            # Justify the lines by adding spaces between the words
+            justified_lines = []
+            for j, line in enumerate(lines):
+                # Calculate the number of spaces to add between the words
+                num_spaces = self.rect.width - sum(len(word) for word in line)
+                spaces_added = 0
+                num_intervals = len(line) - 1
+
+                # Add the spaces between the words
+                justified_line = ""
+                index_into_line = 0
+                for i, word in enumerate(line):
+                    justified_line += word
+
+                    index_into_line = len(justified_line)
+                    if len(effects) > 0:
+                        if j == effects[0][0]:
+                            if index_into_line >= effects[0][1]:
+                                self.text_effects[-1]["index"] += spaces_added
+                                effects.pop(0)
+
+                    if i < num_intervals:
+                        # Add an extra space if there are more spaces to add than intervals
+                        if num_spaces > num_intervals:
+                            justified_line += " "
+                            num_spaces -= 1
+                            spaces_added += 1
+                        justified_line += " " * (num_spaces // num_intervals)
+                        if num_spaces % num_intervals > 0:
+                            justified_line += " "
+                            num_spaces -= 1
+                            spaces_added += 1
+                paragraph_length += len(justified_line)
+                justified_lines.append(justified_line)
+                        
+
+            #final_line = ""
+            #for i, word in enumerate(lines[-1]):
+                #final_line += word
+                #if i < len(lines[-1]) -1:
+                    #final_line += " "
+                
+            #paragraph_length += len(final_line)
+            self.total_text_length += paragraph_length
+            #justified_lines.append(final_line)
+                
+            self.text.append((paragraph_length, justified_lines))
+
+            """
+            # If the height of the box is less than the number of lines,
+            # return only the last height lines
+            if len(justified_lines) > self.rect.height:
+                return justified_lines[-self.rect.height:]
+            # If the height of the box is greater than or equal to the number of lines,
+            # return all of the lines
             else:
-                # Add the current line to the list of lines
-                lines.append(current_line)
-
-                # Start a new line with the current word
-                current_line = [word]
-                current_width = len(word)
-
-        # Add the final line to the list of lines
-        lines.append(current_line)
-
-        # Justify the lines by adding spaces between the words
-        justified_lines = []
-        for line in lines:
-            # Calculate the number of spaces to add between the words
-            num_spaces = self.rect.width - sum(len(word) for word in line)
-            num_intervals = len(line) - 1
-
-            # Add the spaces between the words
-            justified_line = ""
-            for i, word in enumerate(line):
-                justified_line += word
-                if i < num_intervals:
-                    # Add an extra space if there are more spaces to add than intervals
-                    if num_spaces > num_intervals:
-                        justified_line += " "
-                        num_spaces -= 1
-                    justified_line += " " * (num_spaces // num_intervals)
-                    if num_spaces % num_intervals > 0:
-                        justified_line += " "
-                        num_spaces -= 1
-            paragraph_length += len(justified_line)
-            justified_lines.append(justified_line)
-
-        #final_line = ""
-        #for i, word in enumerate(lines[-1]):
-            #final_line += word
-            #if i < len(lines[-1]) -1:
-                #final_line += " "
-            
-        #paragraph_length += len(final_line)
-        self.total_text_length += paragraph_length
-        #justified_lines.append(final_line)
-
-        """
-        # If the height of the box is less than the number of lines,
-        # return only the last height lines
-        if len(justified_lines) > self.rect.height:
-            return justified_lines[-self.rect.height:]
-        # If the height of the box is greater than or equal to the number of lines,
-        # return all of the lines
-        else:
-            return justified_lines
-        """
-
-        return (paragraph_length, justified_lines)
-    
+                return justified_lines
+            """
