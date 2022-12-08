@@ -174,10 +174,10 @@ class Dialog():
 
             # Justify the lines by adding spaces between the words
             justified_lines = []
+            spaces_added = 0
             for j, line in enumerate(lines):
                 # Calculate the number of spaces to add between the words
                 num_spaces = self.rect.width - sum(len(word) for word in line)
-                spaces_added = 0
                 num_intervals = len(line) - 1
 
                 # Add the spaces between the words
@@ -185,13 +185,6 @@ class Dialog():
                 index_into_line = 0
                 for i, word in enumerate(line):
                     justified_line += word
-
-                    index_into_line = len(justified_line)
-                    if len(effects) > 0:
-                        if j == effects[0][0]:
-                            if index_into_line >= effects[0][1]:
-                                self.text_effects[-1]["index"] += spaces_added
-                                effects.pop(0)
 
                     if i < num_intervals:
                         # Add an extra space if there are more spaces to add than intervals
@@ -204,6 +197,15 @@ class Dialog():
                             justified_line += " "
                             num_spaces -= 1
                             spaces_added += 1
+
+                    
+                    index_into_line = len(justified_line)
+                    if len(effects) > 0:
+                        if j == effects[0][0]:
+                            if index_into_line >= effects[0][1]:
+                                self.text_effects[-1]["index"] += spaces_added
+                                effects.pop(0)
+
                 paragraph_length += len(justified_line)
                 justified_lines.append(justified_line)
                         
