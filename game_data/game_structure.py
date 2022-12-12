@@ -9,7 +9,7 @@ intro_splashes= (
 chapters = {
   "hunt":{
     "title": "Part 1: The Hunt",
-    "text":"Lorem Ipsum is simply dummy text of the printing and typesetting industry.\n#pause=1.0 Lorem Ipsum has been the industry's standard dummy #pause=1.0 text ever since the 1500s,when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+    "text":"Lorem Ipsum is simply dummy text of the printing and typesetting industry.\n#pause=2.0 Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,\n#pause=5.0 when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
     "stage":HUNT_SECTION,
   }
 }
