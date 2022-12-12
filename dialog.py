@@ -58,7 +58,7 @@ class Dialog():
                 break
             paragraph_index += 1
 
-        # print all completed paragraph
+        # Print all completed paragraphs
         line_y = self.rect.y
         for i in range(0, paragraph_index):
             for j in range(0, len(self.text[i][1])):
@@ -67,7 +67,7 @@ class Dialog():
                 line_y += 1
             line_y += 2
 
-        current_line = int((self.get_current_dialog_index() ) / self.rect.width) - drawn_lines
+        current_line = int((self.get_current_dialog_index() ) / self.rect.width) - drawn_lines 
 
         # Print up to the current line in the current paragraph
         for i in range(0,current_line):
@@ -146,7 +146,7 @@ class Dialog():
                     value = word[len("#pause="):]
                     self.text_effects.append({"type":TextEffects.PAUSE,"index":equivalent_index-1, "length":float(value)})
                     print(self.text_effects[-1])
-                    effects.append((len(lines), equivalent_index%self.rect.width))
+                    effects.append((len(lines) + 1, equivalent_index%self.rect.width))
                     continue
 
                 # If the current line is empty, add the word to the line
@@ -193,6 +193,7 @@ class Dialog():
                             num_spaces -= 1
                             spaces_added += 1
                         justified_line += " " * (num_spaces // num_intervals)
+                        spaces_added += (num_spaces // num_intervals)
                         if num_spaces % num_intervals > 0:
                             justified_line += " "
                             num_spaces -= 1
@@ -203,8 +204,12 @@ class Dialog():
                     if len(effects) > 0:
                         if j == effects[0][0]:
                             if index_into_line >= effects[0][1]:
-                                self.text_effects[-1]["index"] += spaces_added
+                                print(spaces_added)
+                                #self.text_effects[-1]["index"] += spaces_added
                                 effects.pop(0)
+
+                if len(justified_line) < self.rect.width:
+                    justified_line += " " * (self.rect.width - len(justified_line))
 
                 paragraph_length += len(justified_line)
                 justified_lines.append(justified_line)
