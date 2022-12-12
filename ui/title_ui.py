@@ -1,15 +1,16 @@
 from actions.actions import EscapeAction
 from ui.ui import UI, Button
-from sections.section_layouts import menu_section_layout
-from actions.game_actions import JumpToChapterAction
+from sections.section_layouts import title_section_info
+from actions.game_actions import JumpToStageAction
 
 
-class MenuUI(UI):
+class TitleUI(UI):
     def __init__(self, section, tiles):
         super().__init__(section)
 
-        bs = menu_section_layout["start_button"]
-        self.start_button = Button(bs.x,bs.y,bs.width,bs.height, click_action=JumpToChapterAction(self.section.engine,"hunt"), h_fg=bs.h_fg)
+    def setup_buttons(self, stage):
+        bs = title_section_info["start_button"]
+        self.start_button = Button(bs.x,bs.y,bs.width,bs.height, click_action=JumpToStageAction(self.section.engine, stage), h_fg=bs.h_fg)
         self.elements.append(self.start_button)
 
 """

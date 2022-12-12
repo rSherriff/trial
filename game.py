@@ -19,7 +19,7 @@ from sections.menu_section import MenuSection
 from sections.hunt_section import HuntSection
 from sections.title_section import TitleSection
 from sections.section_layouts import INTRO_SECTION,MENU_SECTION,HUNT_SECTION,TITLE_SECTION
-from game_data.game_structure import stages
+from game_data.game_structure import chapters
 
 class Game(Engine):
     def __init__(self, teminal_width: int, terminal_height: int):
@@ -47,7 +47,7 @@ class Game(Engine):
     def setup_effects(self):
         super().setup_effects()
         self.intro_end_effect = MeltWipeEffect(self, 0, 0, self.screen_width, self.screen_height, MeltWipeEffectType.RANDOM, 20)
-        self.start_stage_effect = MeltWipeEffect(self, 0, 0, self.screen_width, self.screen_height, MeltWipeEffectType.RANDOM, 20)
+        self.start_chapter_effect = MeltWipeEffect(self, 0, 0, self.screen_width, self.screen_height, MeltWipeEffectType.RANDOM, 20)
 
     #*********************************************
     # Sections
@@ -86,19 +86,31 @@ class Game(Engine):
         self.start_full_screen_effect()
 
     def close_all_game_sections(self):
-        self.disable_section(self.game_sections[HUNT_SECTION])
-        self.disable_section(self.game_sections[TITLE_SECTION])
+        self.disable_section(HUNT_SECTION)
+        self.disable_section(TITLE_SECTION)
         
         self.game_sections[HUNT_SECTION].close()
         self.game_sections[TITLE_SECTION].close()
 
-    def start_stage(self, stage):
+    def start_chapter(self, start_chapter):
         self.state = GameState.IN_GAME
 
         self.close_all_game_sections()
 
         self.enable_section(TITLE_SECTION)
-        self.game_sections[TITLE_SECTION].open(stages[stage])
+        self.game_sections[TITLE_SECTION].open(chapters[start_chapter])
 
-        self.set_full_screen_effect(self.start_stage_effect)
+        self.set_full_screen_effect(self.start_chapter_effect)
+        self.start_full_screen_effect()
+
+    
+    def start_stage(self, stage):
+        self.state = GameState.IN_GAME
+
+        self.close_all_game_sections()
+
+        self.enable_section(stage)
+        self.game_sections[stage].open()
+
+        self.set_full_screen_effect(self.start_chapter_effect)
         self.start_full_screen_effect()
