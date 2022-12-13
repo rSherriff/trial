@@ -9,3 +9,6 @@ def translate_range(value, leftMin, leftMax, rightMin, rightMax):
 
     # Convert the 0-1 range into a value in the right range.
     return rightMin + (valueScaled * rightSpan)
+
+def lerp(x:float,y:float,t:float) -> float:
+    return x + ((y-x) * t)

@@ -4,11 +4,13 @@ import random
 from math import sqrt
 
 import numpy as np
+import tcod
+from pygame import mixer, sndarray
+
 import tile_types
 import xp_loader
 from entities.entity import Entity
 from entities.entity_loader import EntityLoader
-from pygame import mixer, sndarray
 
 
 class Section:
@@ -157,3 +159,7 @@ class Section:
             #Build fake sound for when the file can't be found, so everything hereafter works ok
             tmp = np.array([[0,0], [0,0]], np.int32)
             return sndarray.make_sound(tmp)
+
+    def draw_button(self, console, bs):
+        console.draw_frame(bs.x,bs.y,bs.width,bs.height, decoration=bs.decoration, bg=bs.bg, fg=bs.fg)
+        console.print_box(bs.x+1,bs.y+1,bs.width-2,bs.height-2,string=bs.text,alignment=tcod.CENTER, bg=bs.font_bg, fg=bs.font_fg)

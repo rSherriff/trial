@@ -82,5 +82,9 @@ notification_dialog_info = {
 title_section_info = {
     "title" : Rect(1, 3, SCREEN_WIDTH - 2, 1),
     "main_text":Rect(int(SCREEN_WIDTH*0.1), int(SCREEN_HEIGHT*0.25), int(SCREEN_WIDTH*0.8), int(SCREEN_HEIGHT*0.5)),
-    "start_button": Button(text="Start",x=22,y=25,width=7,height=3,bg=black,fg=white,font_fg=grey,h_fg=pink,font_bg=white,decoration=button_box_decoration)
+    "start_button": Button(text="Start",x=22,y=25,width=7,height=3,bg=black,fg=white,font_fg=grey,h_fg=pink,font_bg=white,decoration=button_box_decoration),
+    "start_wait_time": 2.0,
+    "title_time": 4.0,
+    "title_fade_time" : 2.0,
+    "text_color":(255,255,255)
 }

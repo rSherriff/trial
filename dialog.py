@@ -25,7 +25,7 @@ class Dialog():
 
         self.state = DialogState.PENDING
 
-    def start_character_talking(self, text):
+    def start_talking(self, text):
         self.reset_talking()
 
         self.text = list()
@@ -39,8 +39,17 @@ class Dialog():
         self.current_dialog_index = 1
 
     def end_talking(self):
-        self.current_dialog_index = len(self.text)
-        self.change_state(DialogState.FINISHED) 
+        self.current_dialog_index = self.total_text_length
+        self.change_state(DialogState.FINISHED)
+        
+    def is_pending(self):
+        return self.state == DialogState.PENDING
+
+    def is_talking(self):
+        return self.state == DialogState.DIALOG
+
+    def is_finished(self):
+        return self.state == DialogState.FINISHED
 
     def update(self):
         if self.state == DialogState.DIALOG:
@@ -97,7 +106,7 @@ class Dialog():
                 self.current_dialog_index += diff  
 
         if self.current_dialog_index > self.total_text_length:          
-            self.change_state(DialogState.FINISHED)
+            self.end_talking()
 
     def get_current_dialog_index(self):
         return (int(self.current_dialog_index))
