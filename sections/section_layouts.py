@@ -46,7 +46,10 @@ class Button(NamedTuple):
     decoration: list
 
 menu_section_layout = {
-    "start_button": Button(text="Start",x=22,y=25,width=7,height=3,bg=black,fg=white,font_fg=grey,h_fg=pink,font_bg=white,decoration=button_box_decoration)
+    "start_button": Button(text="Start",x=22,y=25,width=7,height=3,bg=black,fg=white,font_fg=grey,h_fg=pink,font_bg=white,decoration=button_box_decoration),
+    "charles_frame_one":Rect(0,0,9,14),
+    "charles_frame_two":Rect(10,0,9,14),
+    "charles_rect":Rect(20,5,9,14),
 }
 
 confirmation_dialog_info = {

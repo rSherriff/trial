@@ -35,7 +35,7 @@ class TextIntroSplash(IntroSplash):
 class ImageIntroSplash(IntroSplash):
     def __init__(self,  intro, hang, outro, width, height, image_path) -> None:
         super().__init__(IntroSplashType.IMAGE,  intro, hang, outro)
-        self.image = Image( width, height, image_path)
+        self.image = Image( 0,0, width, height, image_path)
         self.width = width
         self.height = height
 
