@@ -89,5 +89,6 @@ title_section_info = {
     "start_wait_time": 2.0,
     "title_time": 4.0,
     "title_fade_time" : 2.0,
-    "text_color":(255,255,255)
+    "text_color":(255,255,255),
+    "text_pause_time": 2.0,
 }

@@ -48,6 +48,7 @@ class Game(Engine):
         super().setup_effects()
         self.intro_end_effect = MeltWipeEffect(self, 0, 0, self.screen_width, self.screen_height, MeltWipeEffectType.RANDOM, 20)
         self.start_chapter_effect = MeltWipeEffect(self, 0, 0, self.screen_width, self.screen_height, MeltWipeEffectType.RANDOM, 20)
+        self.horizontal_wipe_effect = HorizontalWipeEffect(self,0,0,self.screen_width, self.screen_height)
 
     #*********************************************
     # Sections

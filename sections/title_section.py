@@ -4,6 +4,7 @@ import tcod
 
 from actions.game_actions import JumpToStageAction
 from dialog import Dialog
+from effects.horizontal_wipe_effect import HorizontalWipeDirection
 from sections.section import Section
 from sections.section_layouts import title_section_info
 from ui.title_ui import TitleUI
@@ -15,6 +16,7 @@ class TitleSectionState(Enum):
     START_WAIT = auto()
     TITLE = auto(),
     TEXT = auto(),
+    PAUSE = auto(),
     BUTTON = auto(),
 
 class TitleSection(Section):
@@ -35,6 +37,10 @@ class TitleSection(Section):
 
         elif self.state == TitleSectionState.TEXT:
             if self.dialog.is_finished():
+                self.change_state(TitleSectionState.PAUSE)
+
+        elif self.state == TitleSectionState.PAUSE:
+            if self.time_into_section > title_section_info["text_pause_time"]:
                 self.change_state(TitleSectionState.BUTTON)
 
         elif self.state == TitleSectionState.BUTTON:
@@ -55,7 +61,7 @@ class TitleSection(Section):
                 title_color = title_section_info["text_color"]
             console.print_box(title_rect.x, title_rect.y, title_rect.width, title_rect.height, self.title, alignment=tcod.CENTER, fg=title_color)
 
-        elif self.state == TitleSectionState.TEXT:
+        elif self.state == TitleSectionState.TEXT or self.state == TitleSectionState.PAUSE:
             console.print_box(title_rect.x, title_rect.y, title_rect.width, title_rect.height, self.title, alignment=tcod.CENTER, fg=title_section_info["text_color"])
             self.dialog.render(console)
 
@@ -97,6 +103,10 @@ class TitleSection(Section):
 
         if new_state == TitleSectionState.TEXT:
             self.dialog.start_talking(self.text)
+        elif new_state == TitleSectionState.BUTTON:
+            self.engine.set_full_screen_effect(self.engine.horizontal_wipe_effect, [HorizontalWipeDirection.RIGHT])
+            self.engine.start_full_screen_effect()
+
 
     def skip_to_end(self):
         self.change_state(TitleSectionState.BUTTON)
