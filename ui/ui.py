@@ -27,31 +27,35 @@ class UI:
 
     def render(self, console: Console):
         for element in self.elements:
-            element.render(console)
+            if element.enabled:
+                element.render(console)
 
     def keydown(self, event: tcod.event.KeyDown):
         if self.enabled == False:
             return
 
         for element in self.elements:
-            element.on_keydown(event)
+            if element.enabled:
+                element.on_keydown(event)
 
     def mousedown(self, x: int, y: int):
         if self.enabled == False:
             return
             
         for element in self.elements:
-            if element.is_mouseover(x, y):
-                element.on_mousedown(x,y)
-            elif isinstance(element, Input):
-                element.selected = False
-                element.blink = False
+            if element.enabled:
+                if element.is_mouseover(x, y):
+                    element.on_mousedown(x,y)
+                elif isinstance(element, Input):
+                    element.selected = False
+                    element.blink = False
 
     def mouseup(self, x: int, y: int):
         if self.enabled == False:
             return
             
         for element in self.elements:
+            if element.enabled:
                 element.on_mouseup()
 
     def mousemove(self, x: int, y: int):
@@ -59,26 +63,27 @@ class UI:
             return
             
         for element in self.elements:
-            if element.is_mouseover(x, y):
-                if not isinstance(element, Tooltip):
-                    if element.mouseover == False:
-                        element.on_mouseenter(x,y)
-                    element.mouseover = True
+            if element.enabled:
+                if element.is_mouseover(x, y):
+                    if not isinstance(element, Tooltip):
+                        if element.mouseover == False:
+                            element.on_mouseenter(x,y)
+                        element.mouseover = True
 
-                elif isinstance(element, Tooltip) and not self.showing_tooltip:
-                    self.showing_tooltip = True
-                    if element.mouseover == False:
-                        element.on_mouseenter(x,y)
-                    element.mouseover = True
+                    elif isinstance(element, Tooltip) and not self.showing_tooltip:
+                        self.showing_tooltip = True
+                        if element.mouseover == False:
+                            element.on_mouseenter(x,y)
+                        element.mouseover = True
 
-            else:
-                if element.mouseover == True:
-                    element.on_mouseleave()
-                    if isinstance(element, Tooltip):
-                        self.showing_tooltip = False
-                element.mouseover = False
+                else:
+                    if element.mouseover == True:
+                        element.on_mouseleave()
+                        if isinstance(element, Tooltip):
+                            self.showing_tooltip = False
+                    element.mouseover = False
 
-            element.mousemove(x,y)
+                element.mousemove(x,y)
         
         self.sort_elements()
 
@@ -103,7 +108,14 @@ class UIElement:
         self.height = height
         self.mouseover = False
         self.render_order = 0
+        self.enabled= True
         pass
+
+    def disable(self):
+        self.enabled = False
+
+    def enable(self):
+        self.enabled = True
 
     def render(self, console: Console):
         pass

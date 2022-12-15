@@ -67,16 +67,20 @@ class HuntSection(Section):
             box_rect = hunt_section_info["instruction_dialog_rect"]
             dialog_box_rect = Rect(box_rect.x, box_rect.y,  max(box_rect.width, self.instruction_dialog.longest_line), max(4,self.instruction_dialog.get_current_height()))
             self.draw_box(console, dialog_box_rect, hunt_section_info["instruction_dialog_decoration"],hunt_section_info["instruction_dialog_margin"], hunt_section_info["instruction_dialog_fg"],hunt_section_info["instruction_dialog_bg"])
-            
 
             self.instruction_dialog.render(console)
+
+        elif self.state == HuntSectionStates.PLAYING:
+            self.draw_image(console, hunt_section_info["advisor_top_eyes_open"].rect, self.advisor_top_animaton.get_current_frame())
+            self.draw_image(console, hunt_section_info["advisor_btm_mouth_closed"].rect, hunt_section_info["advisor_btm_mouth_closed"].image)
+            self.draw_button(console, hunt_section_info["instructions_button"])
 
         self.draw_button(console, hunt_section_info["quit_button"])
         self.render_ui(console)
 
     def open(self):
-        self.change_state(HuntSectionStates.PENDING)
         self.ui.setup_buttons()
+        self.change_state(HuntSectionStates.PENDING)        
 
     def refresh(self):
         pass
@@ -85,7 +89,8 @@ class HuntSection(Section):
         pass
       
     def mousedown(self,button,x,y):
-        pass
+        if self.state == HuntSectionStates.INSTRUCTION:
+            self.change_state(HuntSectionStates.PLAYING)
 
     def keydown(self, key):
         pass
@@ -96,6 +101,11 @@ class HuntSection(Section):
 
         if new_state == HuntSectionStates.INSTRUCTION:
             self.instruction_dialog.start_talking(chapters["hunt"]["instruction"])
+            self.ui.instructions_button.disable()
             self.advisor_btm_animaton.start()
         else:
             self.instruction_dialog.reset_talking()
+            self.ui.instructions_button.enable()
+
+    def open_instructions(self):
+        self.change_state(HuntSectionStates.INSTRUCTION)

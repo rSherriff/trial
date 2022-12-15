@@ -2,6 +2,14 @@
 
 from actions.actions import Action
 
+class GenericAction(Action):
+    def __init__(self, engine, func) -> None:
+        super().__init__(engine)
+        self.func = func
+
+    def perform(self) -> None:
+        self.func()
+
 class JumpToChapterAction(Action):
     def __init__(self, engine, chapter) -> None:
         super().__init__(engine)

@@ -101,7 +101,8 @@ title_section_info = {
 }
 
 hunt_section_info = {
-    "quit_button": Button(text="Quit",x=6,y=25,width=6,height=3,bg=main_background,fg=white,font_fg=grey,h_fg=pink,font_bg=white,decoration=button_box_decoration),
+    "quit_button": Button(text="Quit",x=7,y=25,width=6,height=3,bg=main_background,fg=white,font_fg=grey,h_fg=pink,font_bg=white,decoration=button_box_decoration),
+    "instructions_button": Button(text="Instructions",x=3,y=22,width=14,height=3,bg=main_background,fg=white,font_fg=grey,h_fg=pink,font_bg=white,decoration=button_box_decoration),
     "instruction_dialog_rect": Rect(20,4,25, 20),
     "instruction_dialog_decoration":dialog_box_decoration_filled,
     "instruction_dialog_margin":-1,
