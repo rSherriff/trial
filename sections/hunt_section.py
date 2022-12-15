@@ -2,7 +2,7 @@ from sections.section import Section
 
 class HuntSection(Section):
     def __init__(self, engine, x: int, y: int, width: int, height: int, xp_filepath: str = ""):
-        super().__init__(engine, x, y, width, height, "england.xp")      
+        super().__init__(engine, x, y, width, height, "hunt_section.xp")      
 
     def update(self):
         super().update()
