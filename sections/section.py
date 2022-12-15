@@ -11,6 +11,7 @@ import tile_types
 import xp_loader
 from entities.entity import Entity
 from entities.entity_loader import EntityLoader
+from sections.section_layouts import full_fg_tile
 
 
 class Section:
@@ -166,3 +167,12 @@ class Section:
 
     def draw_image(self, console, rect, image):
         console.tiles_rgb[rect.x: rect.x + rect.width,rect.y: rect.y + rect.height] = image.tiles[0: rect.width, 0: rect.height]["graphic"]
+
+    def draw_box(self, console, rect, decoration, margin, fg, bg):
+        render_x = rect.x + margin
+        render_y = rect.y + margin
+        render_width =  rect.width - (margin * 2)
+        render_height = rect.height - (margin * 2)
+
+        console.draw_frame(x=render_x, y=render_y,width=render_width,height=render_height, decoration=decoration, bg=bg, fg=fg)
+

@@ -1,4 +1,5 @@
 from typing import NamedTuple
+from image import Image
 
 INTRO_SECTION = "introSection"
 MENU_SECTION = "menuSection"
@@ -12,6 +13,8 @@ dialog_box_decoration =  chr(198) + chr(9608) + chr(201) + chr(9608)+ " "+ chr(9
 dialog_box_decoration_filled =  chr(198) + chr(9608) + chr(201) + chr(9608)+ chr(9608)+ chr(9608) + chr(244)+ chr(9608)+ chr(230)
 
 button_box_decoration  =  chr(238) + chr(9604) + chr(232) + chr(9616)+ chr(9608)+chr(9612)+ chr(239) + chr(9600)+ chr(235)
+
+full_fg_tile = 9608
 
 black = (0,0,0)
 white = (255,255,255)
@@ -44,6 +47,10 @@ class Button(NamedTuple):
     font_bg : tuple
     font_fg : tuple
     decoration: list
+
+class ImageRect(NamedTuple):
+    rect : Rect
+    image:Image
 
 menu_section_layout = {
     "start_button": Button(text="Start",x=22,y=25,width=7,height=3,bg=black,fg=white,font_fg=grey,h_fg=pink,font_bg=white,decoration=button_box_decoration),
@@ -94,5 +101,17 @@ title_section_info = {
 }
 
 hunt_section_info = {
-    "quit_button": Button(text="Quit",x=4,y=25,width=6,height=3,bg=main_background,fg=white,font_fg=grey,h_fg=pink,font_bg=white,decoration=button_box_decoration),
+    "quit_button": Button(text="Quit",x=6,y=25,width=6,height=3,bg=main_background,fg=white,font_fg=grey,h_fg=pink,font_bg=white,decoration=button_box_decoration),
+    "instruction_dialog_rect": Rect(20,4,25, 20),
+    "instruction_dialog_decoration":dialog_box_decoration_filled,
+    "instruction_dialog_margin":-1,
+    "instruction_dialog_bg": main_background,
+    "instruction_dialog_fg": white,
+    "instruction_dialog_text_color": grey,
+    "start_wait_time": 2.0,
+    "speech_mark_image": ImageRect(Rect(18,6,1,1),Image(0,0,1,1, "images/misc.xp")),
+    "advisor_top_eyes_open": ImageRect(Rect(4,3,13,7), Image(0,0,13,7, "images/advisor.xp")),
+    "advisor_top_eyes_closed": ImageRect(Rect(4,3,13,7), Image(13,0,13,7, "images/advisor.xp")),
+    "advisor_btm_mouth_closed": ImageRect(Rect(4,10,13,8), Image(0,7,13,8, "images/advisor.xp")),
+    "advisor_btm_mouth_open": ImageRect(Rect(4,10,13,8), Image(13,7,13,8, "images/advisor.xp")),
 }
