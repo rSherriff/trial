@@ -12,7 +12,7 @@ class TextEffects(Enum):
     PAUSE = auto()
 
 class Dialog():
-    def __init__(self, section: Section, rect: Rect) -> None:
+    def __init__(self, section: Section, rect: Rect, fg=(255,255,255), bg=(0,0,0)) -> None:
 
         self.section = section
         
@@ -22,6 +22,11 @@ class Dialog():
 
         self.current_pause = 0
         self.current_dialog_index = 0
+        self.longest_line = 0
+        self.current_line = 0
+
+        self.fg_color = fg
+        self.bg_color = bg
 
         self.state = DialogState.PENDING
 
@@ -37,6 +42,8 @@ class Dialog():
         self.total_text_length = 0
         self.text_effects = list()
         self.current_dialog_index = 1
+        self.longest_line = 0
+        self.current_line = 0
 
     def end_talking(self):
         self.current_dialog_index = self.total_text_length
@@ -55,6 +62,11 @@ class Dialog():
         if self.state == DialogState.DIALOG:
             self.dialog_tick_loop()
 
+    def get_current_height(self):
+        if self.is_finished():
+            return int((self.total_text_length ) / self.rect.width)
+        return min( int((self.total_text_length ) / self.rect.width), self.current_line + 1)
+        
     def render(self, console):
         drawn_lines = 0
 
@@ -71,23 +83,23 @@ class Dialog():
         line_y = self.rect.y
         for i in range(0, paragraph_index):
             for j in range(0, len(self.text[i][1])):
-                console.print(self.rect.x, line_y, self.text[i][1][j], fg=(255,255,255), bg=(0,0,0))
+                console.print(self.rect.x, line_y, self.text[i][1][j], fg=self.fg_color, bg=self.bg_color)
                 drawn_lines += 1
                 line_y += 1
             line_y += 2
 
-        current_line = int((self.get_current_dialog_index() ) / self.rect.width) - drawn_lines 
+        self.current_line = int((self.get_current_dialog_index() ) / self.rect.width) - drawn_lines 
 
         # Print up to the current line in the current paragraph
-        for i in range(0,current_line):
-            console.print(self.rect.x, line_y, self.text[paragraph_index][1][i], fg=(255,255,255), bg=(0,0,0))
+        for i in range(0,self.current_line):
+            console.print(self.rect.x, line_y, self.text[paragraph_index][1][i], fg=self.fg_color, bg=self.bg_color)
             line_y += 1
 
         # Print up to the current character in the current line in the current paragraph
         if paragraph_index < len(self.text):
-            if current_line < len(self.text[paragraph_index][1]):
+            if self.current_line < len(self.text[paragraph_index][1]):
                 current_character = self.get_current_dialog_index() % self.rect.width
-                console.print(self.rect.x, line_y, self.text[paragraph_index][1][current_line][:current_character], fg=(255,255,255), bg=(0,0,0))
+                console.print(self.rect.x, line_y, self.text[paragraph_index][1][self.current_line][:current_character], fg=self.fg_color, bg=self.bg_color)
 
     def dialog_tick_loop(self):
         self.current_pause += self.section.engine.get_delta_time()
@@ -219,6 +231,9 @@ class Dialog():
 
                 if len(justified_line) < self.rect.width:
                     justified_line += " " * (self.rect.width - len(justified_line))
+
+                if len(justified_line) > self.longest_line:
+                    self.longest_line = len(justified_line)
 
                 paragraph_length += len(justified_line)
                 justified_lines.append(justified_line)
