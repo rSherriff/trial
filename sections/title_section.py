@@ -20,10 +20,10 @@ class TitleSectionState(Enum):
     BUTTON = auto(),
 
 class TitleSection(Section):
-    def __init__(self, engine, x: int, y: int, width: int, height: int, xp_filepath: str = ""):
-        super().__init__(engine, x, y, width, height, "title_section.xp")      
+    def __init__(self, engine, x: int, y: int, width: int, height: int, name: str = ""):
+        super().__init__(engine, x, y, width, height, "title_section.xp", name)      
         self.dialog = Dialog(self, title_section_info["main_text"])
-        self.ui = TitleUI(self, self.tiles["graphic"])
+        self.ui = None
         self.change_state(TitleSectionState.START_WAIT)
 
     def update(self):
@@ -77,7 +77,8 @@ class TitleSection(Section):
         self.title = chapter["title"]
         self.text = chapter["text"]
         self.stage = chapter["stage"]
-        self.ui.setup_buttons(self.stage)
+        self.ui = None
+        
         
     def refresh(self):
         pass
@@ -104,6 +105,8 @@ class TitleSection(Section):
         if new_state == TitleSectionState.TEXT:
             self.dialog.start_talking(self.text)
         elif new_state == TitleSectionState.BUTTON:
+            self.ui = TitleUI(self, self.tiles["graphic"])
+            self.ui.setup_buttons(self.stage)
             self.engine.set_full_screen_effect(self.engine.horizontal_wipe_effect, [HorizontalWipeDirection.RIGHT])
             self.engine.start_full_screen_effect()
 
