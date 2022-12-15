@@ -86,6 +86,12 @@ class Game(Engine):
         self.set_full_screen_effect(self.intro_end_effect)
         self.start_full_screen_effect()
 
+    def open_menu(self):
+        self.change_state(GameState.MENU)
+        
+        self.set_full_screen_effect(self.intro_end_effect)
+        self.start_full_screen_effect()
+
     def close_all_game_sections(self):
         self.disable_section(HUNT_SECTION)
         self.disable_section(TITLE_SECTION)
@@ -94,7 +100,7 @@ class Game(Engine):
         self.game_sections[TITLE_SECTION].close()
 
     def start_chapter(self, start_chapter):
-        self.state = GameState.IN_GAME
+        self.change_state(GameState.IN_GAME)
 
         self.close_all_game_sections()
 
@@ -103,10 +109,9 @@ class Game(Engine):
 
         self.set_full_screen_effect(self.start_chapter_effect)
         self.start_full_screen_effect()
-
-    
+  
     def start_stage(self, stage):
-        self.state = GameState.IN_GAME
+        self.change_state(GameState.IN_GAME)
 
         self.close_all_game_sections()
 

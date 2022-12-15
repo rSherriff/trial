@@ -18,3 +18,9 @@ class JumpToStageAction(Action):
     def perform(self) -> None:
         self.engine.start_stage(self.stage)
 
+class JumpToMenuAction(Action):
+    def __init__(self, engine) -> None:
+        super().__init__(engine)
+
+    def perform(self) -> None:
+        self.engine.open_menu()

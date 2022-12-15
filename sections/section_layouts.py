@@ -92,3 +92,7 @@ title_section_info = {
     "text_color":(255,255,255),
     "text_pause_time": 2.0,
 }
+
+hunt_section_info = {
+    "quit_button": Button(text="Quit",x=4,y=25,width=6,height=3,bg=main_background,fg=white,font_fg=grey,h_fg=pink,font_bg=white,decoration=button_box_decoration),
+}
