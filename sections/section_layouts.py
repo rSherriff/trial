@@ -112,11 +112,16 @@ hunt_section_info = {
     "advisor_dialog_fg": white,
     "advisor_dialog_text_color": grey,
     "start_wait_time": 2.0,
+    "setup_wait_time": 1.0,
+    "see_instructions_wait_time" : 0.7,
     "speech_mark_image": ImageRect(Rect(17,6,1,1),Image(0,0,1,1, "images/misc.xp")),
     "advisor_top_eyes_open": ImageRect(Rect(4,3,13,7), Image(0,0,13,7, "images/advisor.xp")),
     "advisor_top_eyes_closed": ImageRect(Rect(4,3,13,7), Image(13,0,13,7, "images/advisor.xp")),
     "advisor_btm_mouth_closed": ImageRect(Rect(4,10,13,8), Image(0,7,13,8, "images/advisor.xp")),
     "advisor_btm_mouth_open": ImageRect(Rect(4,10,13,8), Image(13,7,13,8, "images/advisor.xp")),
     "advisor_btm_mouth_open": ImageRect(Rect(4,10,13,8), Image(13,7,13,8, "images/advisor.xp")),
+    "game_grid_3x3": ImageRect(Rect(33,14,7,7), Image(0,0,7,7, "images/hunt_grids.xp")),
+    "game_grid_4x4": ImageRect(Rect(31,12,9,9), Image(7,0,9,9, "images/hunt_grids.xp")),
+    "game_grid_5x5": ImageRect(Rect(29,10,11,11), Image(16,0,11,11, "images/hunt_grids.xp")),
     
 }
