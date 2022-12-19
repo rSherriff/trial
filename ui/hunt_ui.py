@@ -13,9 +13,13 @@ class HuntUI(UI):
         self.quit_button = Button(bs.x,bs.y,bs.width,bs.height, click_action=JumpToMenuAction(self.section.engine), h_fg=bs.h_fg)
         self.elements.append(self.quit_button)
 
-        bs = hunt_section_info["instructions_button"]
-        self.instructions_button = Button(bs.x,bs.y,bs.width,bs.height, click_action=GenericAction(self.section.engine, self.section.open_instructions), h_fg=bs.h_fg)
-        self.elements.append(self.instructions_button)
+        bs = hunt_section_info["instructions_open_button"]
+        self.instructions_open_button = Button(bs.x,bs.y,bs.width,bs.height, click_action=GenericAction(self.section.engine, self.section.open_instructions), h_fg=bs.h_fg)
+        self.elements.append(self.instructions_open_button)
+
+        bs = hunt_section_info["instructions_close_button"]
+        self.instructions_close_button = Button(bs.x,bs.y,bs.width,bs.height, click_action=GenericAction(self.section.engine, self.section.close_instructions), h_fg=bs.h_fg)
+        self.elements.append(self.instructions_close_button)
 
 """
         bd = [21, 24, 9, 3]  # Button Dimensions

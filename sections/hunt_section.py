@@ -1,5 +1,7 @@
 from enum import Enum, auto
 
+import tcod
+
 from animation import Animation
 from dialog import Dialog
 from game_data.game_structure import chapters
@@ -11,6 +13,7 @@ from ui.hunt_ui import HuntUI
 class HuntSectionStates(Enum):
     NONE = auto(),
     PENDING = auto(),
+    INTRO = auto(),
     INSTRUCTION = auto(),
     PLAYING = auto(),
 
@@ -19,7 +22,7 @@ class HuntSection(Section):
         super().__init__(engine, x, y, width, height, "hunt_section.xp", name) 
         self.ui = HuntUI(self, self.tiles["graphic"])     
 
-        self.instruction_dialog = Dialog(self, hunt_section_info["instruction_dialog_rect"], hunt_section_info["instruction_dialog_text_color"], hunt_section_info["instruction_dialog_fg"])
+        self.advisor_dialog = Dialog(self, hunt_section_info["advisor_dialog_rect"], hunt_section_info["advisor_dialog_text_color"], hunt_section_info["advisor_dialog_fg"])
         self.state = HuntSectionStates.NONE
         self.time_into_state = 0
 
@@ -39,11 +42,11 @@ class HuntSection(Section):
 
         if self.state == HuntSectionStates.PENDING:
             if self.time_into_state >= hunt_section_info["start_wait_time"]:
-                self.change_state(HuntSectionStates.INSTRUCTION)
+                self.change_state(HuntSectionStates.INTRO)
 
-        elif self.state == HuntSectionStates.INSTRUCTION:
-            self.instruction_dialog.update()
-            if self.instruction_dialog.is_finished():
+        elif self.state == HuntSectionStates.INTRO:
+            self.advisor_dialog.update()
+            if self.advisor_dialog.is_finished():
                 self.advisor_btm_animaton.stop()
 
     
@@ -54,26 +57,30 @@ class HuntSection(Section):
             self.draw_image(console, hunt_section_info["advisor_top_eyes_open"].rect, self.advisor_top_animaton.get_current_frame())
             self.draw_image(console, hunt_section_info["advisor_btm_mouth_closed"].rect, hunt_section_info["advisor_btm_mouth_closed"].image)
 
-        elif self.state == HuntSectionStates.INSTRUCTION:
+        elif self.state == HuntSectionStates.INTRO:
             self.draw_image(console, hunt_section_info["advisor_top_eyes_open"].rect, self.advisor_top_animaton.get_current_frame())
 
-            if self.instruction_dialog.is_talking():
+            if self.advisor_dialog.is_talking():
                 self.draw_image(console, hunt_section_info["advisor_btm_mouth_open"].rect, self.advisor_btm_animaton.get_current_frame())
             else:
                 self.draw_image(console, hunt_section_info["advisor_btm_mouth_closed"].rect, hunt_section_info["advisor_btm_mouth_closed"].image)
             
             self.draw_image(console, hunt_section_info["speech_mark_image"].rect, hunt_section_info["speech_mark_image"].image)
 
-            box_rect = hunt_section_info["instruction_dialog_rect"]
-            dialog_box_rect = Rect(box_rect.x, box_rect.y,  max(box_rect.width, self.instruction_dialog.longest_line), max(4,self.instruction_dialog.get_current_height()))
-            self.draw_box(console, dialog_box_rect, hunt_section_info["instruction_dialog_decoration"],hunt_section_info["instruction_dialog_margin"], hunt_section_info["instruction_dialog_fg"],hunt_section_info["instruction_dialog_bg"])
+            box_rect = hunt_section_info["advisor_dialog_rect"]
+            dialog_box_rect = Rect(box_rect.x, box_rect.y,  max(box_rect.width, self.advisor_dialog.longest_line), max(4,self.advisor_dialog.get_current_height()))
+            self.draw_box(console, dialog_box_rect, hunt_section_info["advisor_dialog_decoration"],hunt_section_info["advisor_dialog_margin"], hunt_section_info["advisor_dialog_fg"],hunt_section_info["advisor_dialog_bg"])
 
-            self.instruction_dialog.render(console)
+            self.advisor_dialog.render(console)
+
+        elif self.state == HuntSectionStates.INSTRUCTION:
+            self.draw_image(console, hunt_section_info["instructions_image"].rect, hunt_section_info["instructions_image"].image)
+            self.draw_button(console, hunt_section_info["instructions_close_button"])
 
         elif self.state == HuntSectionStates.PLAYING:
             self.draw_image(console, hunt_section_info["advisor_top_eyes_open"].rect, self.advisor_top_animaton.get_current_frame())
             self.draw_image(console, hunt_section_info["advisor_btm_mouth_closed"].rect, hunt_section_info["advisor_btm_mouth_closed"].image)
-            self.draw_button(console, hunt_section_info["instructions_button"])
+            self.draw_button(console, hunt_section_info["instructions_open_button"])
 
         self.draw_button(console, hunt_section_info["quit_button"])
         self.render_ui(console)
@@ -89,23 +96,42 @@ class HuntSection(Section):
         pass
       
     def mousedown(self,button,x,y):
-        if self.state == HuntSectionStates.INSTRUCTION:
-            self.change_state(HuntSectionStates.PLAYING)
+        if self.state == HuntSectionStates.INTRO:
+            if self.advisor_dialog.is_talking():
+                self.advisor_dialog.end_talking()
+            else:
+                self.change_state(HuntSectionStates.PLAYING)
 
     def keydown(self, key):
-        pass
+        if key == tcod.event.K_ESCAPE or key == tcod.event.K_SPACE or key == tcod.event.K_RETURN:
+            if self.advisor_dialog.is_talking():
+                self.advisor_dialog.end_talking()
+            if self.state == HuntSectionStates.INSTRUCTION:
+                self.change_state(HuntSectionStates.PLAYING)
 
     def change_state(self, new_state):
         self.state = new_state
         self.time_into_state = 0
 
-        if new_state == HuntSectionStates.INSTRUCTION:
-            self.instruction_dialog.start_talking(chapters["hunt"]["instruction"])
-            self.ui.instructions_button.disable()
+        if new_state == HuntSectionStates.PENDING:
+            self.ui.instructions_open_button.disable()
+            self.ui.instructions_close_button.disable()
+        elif new_state == HuntSectionStates.INTRO:
+            self.advisor_dialog.start_talking(chapters["hunt"]["intro"])
+            self.ui.instructions_open_button.disable()
             self.advisor_btm_animaton.start()
+        elif new_state == HuntSectionStates.INSTRUCTION:
+            self.ui.instructions_open_button.disable()
+            self.ui.instructions_close_button.enable()
+            self.ui.quit_button.disable()
         else:
-            self.instruction_dialog.reset_talking()
-            self.ui.instructions_button.enable()
+            self.advisor_dialog.reset_talking()
+            self.ui.instructions_open_button.enable()
+            self.ui.instructions_close_button.disable()
+            self.ui.quit_button.enable()
 
     def open_instructions(self):
         self.change_state(HuntSectionStates.INSTRUCTION)
+
+    def close_instructions(self):
+        self.change_state(HuntSectionStates.PLAYING)
