@@ -129,23 +129,17 @@ class HuntSection(Section):
         super().render(console)
 
         self.render_advisor_dialog(console)
-        self.render_advisor(console)        
+        self.render_advisor(console)  
+        self.render_game_grid(console)   
+        self.render_special_nodes(console)   
 
         if self.state == HuntSectionStates.INSTRUCTION:
-            self.draw_image(console, hunt_section_info["instructions_image"].rect, hunt_section_info["instructions_image"].image)
-            self.draw_button(console, hunt_section_info["instructions_close_button"])
-
+            self.render_instructions(console)
         elif self.state == HuntSectionStates.GAME:
-            self.render_game_grid(console)
             self.render_normal_nodes(console)
-            self.render_special_nodes(console)
 
             if self.seen_instructions:
                 self.draw_button(console, hunt_section_info["instructions_open_button"])
-
-        elif self.state == HuntSectionStates.GAME_RESET:
-            self.render_game_grid(console)
-            self.render_special_nodes(console)
 
         self.draw_button(console, hunt_section_info["quit_button"])
         self.render_ui(console)
@@ -161,7 +155,8 @@ class HuntSection(Section):
             self.advisor_dialog.render(console)
 
     def render_game_grid(self, console):
-        self.draw_image(console, self.games[self.current_game].grid.rect, self.games[self.current_game].grid.image)
+        if self.should_render_game_grid():
+            self.draw_image(console, self.games[self.current_game].grid.rect, self.games[self.current_game].grid.image)
 
     def render_normal_nodes(self, console):
         for node_pos in self.get_currently_active_nodes():
@@ -169,16 +164,17 @@ class HuntSection(Section):
             console.print(x,y,HUNT_GAME_CONSTANTS.chased_chr,fg=(255,255,255),bg=(0,0,0))
 
     def render_special_nodes(self,console):
-        game = self.games[self.current_game]
-        if not self.last_activated_node == None:
-            node_pos = self.last_activated_node
-            x ,y = self.get_node_coordinates(node_pos)
-            node = game.nodes[node_pos[0]][node_pos[1]]
+        if self.should_render_special_nodes():
+            game = self.games[self.current_game]
+            if not self.last_activated_node == None:
+                node_pos = self.last_activated_node
+                x ,y = self.get_node_coordinates(node_pos)
+                node = game.nodes[node_pos[0]][node_pos[1]]
 
-            if node.type == HuntGameNodeTypes.PURSUER:
-                console.print(x,y,HUNT_GAME_CONSTANTS.pursuer_chr,fg=(255,255,255),bg=(0,0,0))
-            elif node.type == HuntGameNodeTypes.GOAL:
-                console.print(x,y,HUNT_GAME_CONSTANTS.goal_chr,fg=(255,255,255),bg=(0,0,0))
+                if node.type == HuntGameNodeTypes.PURSUER:
+                    console.print(x,y,HUNT_GAME_CONSTANTS.pursuer_chr,fg=(255,255,255),bg=(0,0,0))
+                elif node.type == HuntGameNodeTypes.GOAL:
+                    console.print(x,y,HUNT_GAME_CONSTANTS.goal_chr,fg=(255,255,255),bg=(0,0,0))
 
     def render_advisor(self, console):
         self.draw_image(console, hunt_section_info["advisor_top_eyes_open"].rect, self.advisor_top_animaton.get_current_frame())
@@ -186,6 +182,10 @@ class HuntSection(Section):
             self.draw_image(console, hunt_section_info["advisor_btm_mouth_open"].rect, self.advisor_btm_animaton.get_current_frame())
         else:
             self.draw_image(console, hunt_section_info["advisor_btm_mouth_closed"].rect, hunt_section_info["advisor_btm_mouth_closed"].image)
+
+    def render_instructions(self, console):
+        self.draw_image(console, hunt_section_info["instructions_image"].rect, hunt_section_info["instructions_image"].image)
+        self.draw_button(console, hunt_section_info["instructions_close_button"])
 
     def open(self):
         self.ui.setup_buttons()
@@ -215,7 +215,7 @@ class HuntSection(Section):
                         for i in self.get_currently_active_nodes():
                             if (y,x) == i:
                                 self.last_activated_node = (y,x)
-        if self.state == HuntSectionStates.GAME_RESET:
+        elif self.state == HuntSectionStates.GAME_RESET:
             if self.advisor_dialog.is_talking():
                 self.advisor_dialog.end_talking()
             else:
@@ -296,6 +296,12 @@ class HuntSection(Section):
 
     def should_render_dialog(self):
         return self.state == HuntSectionStates.INTRO or self.state == HuntSectionStates.GAME_RESET or self.state == HuntSectionStates.GAME_TRANSITION or self.state == HuntSectionStates.GAME_TEARDOWN
+
+    def should_render_game_grid(self):
+        return self.state == HuntSectionStates.GAME or self.state == HuntSectionStates.GAME_RESET or self.state == HuntSectionStates.GAME_SETUP or self.state == HuntSectionStates.GAME_TRANSITION or self.state == HuntSectionStates.GAME_TEARDOWN
+    
+    def should_render_special_nodes(self):
+        return self.state == HuntSectionStates.GAME or self.state == HuntSectionStates.GAME_RESET or self.state == HuntSectionStates.GAME_SETUP or self.state == HuntSectionStates.GAME_TRANSITION or self.state == HuntSectionStates.GAME_TEARDOWN
 
     def get_node_coordinates(self, node):
         game = self.games[self.current_game]
