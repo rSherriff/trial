@@ -32,3 +32,10 @@ class JumpToMenuAction(Action):
 
     def perform(self) -> None:
         self.engine.open_menu()
+
+class EndCurrentChapterAction(Action):
+    def __init__(self, engine) -> None:
+        super().__init__(engine)
+
+    def perform(self) -> None:
+        self.engine.end_current_chapter()

@@ -5,6 +5,7 @@ INTRO_SECTION = "introSection"
 MENU_SECTION = "menuSection"
 HUNT_SECTION = "huntSection"
 TITLE_SECTION = "titleSection"
+PURGE_SECTION = "purgeSection"
 
 SCREEN_WIDTH = 51
 SCREEN_HEIGHT = 30
@@ -127,4 +128,11 @@ hunt_section_info = {
     "game_grid_4x4": ImageRect(Rect(31,12,9,9), Image(7,0,9,9, "images/hunt_grids.xp")),
     "game_grid_5x5": ImageRect(Rect(29,10,11,11), Image(16,0,11,11, "images/hunt_grids.xp")),
     
+}
+
+purge_section_info = {
+    "quit_button": Button(text="Quit",x=7,y=25,width=6,height=3,bg=main_background,fg=white,font_fg=grey,h_fg=pink,font_bg=white,decoration=button_box_decoration),
+    "instructions_open_button": Button(text="Instructions",x=3,y=22,width=14,height=3,bg=main_background,fg=white,font_fg=grey,h_fg=pink,font_bg=white,decoration=button_box_decoration),
+    "instructions_close_button": Button(text="Close",x=23,y=19,width=7,height=3,bg=black,fg=white,font_fg=grey,h_fg=pink,font_bg=white,decoration=button_box_decoration),
+    "instructions_image": ImageRect(Rect(8,3,36,21), Image(0,0,36,21, "images/purge_instructions.xp")),
 }
