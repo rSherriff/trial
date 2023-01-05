@@ -7,7 +7,7 @@ from dialog import Dialog
 from effects.horizontal_wipe_effect import HorizontalWipeDirection
 from game_data.game_structure import chapters
 from sections.section import Section
-from sections.section_layouts import Rect, ImageRect, hunt_section_info, land_green
+from sections.section_layouts import Rect, ImageRect, hunt_section_info, land_green, main_text
 from ui.hunt_ui import HuntUI
 from typing import NamedTuple
 from image import Image
@@ -176,7 +176,7 @@ class HuntSection(Section):
     def render_normal_nodes(self, console):
         for node_pos in self.get_currently_active_nodes():
             x ,y = self.get_node_coordinates(node_pos)
-            console.print(x,y,HUNT_GAME_CONSTANTS.chased_chr,fg=(255,255,255),bg=land_green)
+            console.print(x,y,HUNT_GAME_CONSTANTS.chased_chr,fg=main_text,bg=land_green)
 
     def render_special_nodes(self,console):
         if self.should_render_special_nodes():
@@ -187,9 +187,9 @@ class HuntSection(Section):
                 node = game.nodes[node_pos[0]][node_pos[1]]
 
                 if node.type == HuntGameNodeTypes.PURSUER:
-                    console.print(x,y,HUNT_GAME_CONSTANTS.pursuer_chr,fg=(255,255,255),bg=land_green)
+                    console.print(x,y,HUNT_GAME_CONSTANTS.pursuer_chr,fg=main_text,bg=land_green)
                 elif node.type == HuntGameNodeTypes.GOAL:
-                    console.print(x,y,HUNT_GAME_CONSTANTS.goal_chr,fg=(255,255,255),bg=land_green)
+                    console.print(x,y,HUNT_GAME_CONSTANTS.goal_chr,fg=main_text,bg=land_green)
 
     def render_advisor(self, console):
         self.draw_image(console, hunt_section_info["advisor_top_eyes_open"].rect, self.advisor_top_animaton.get_current_frame())
