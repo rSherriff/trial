@@ -56,6 +56,21 @@ GAME_1_NODES = ((HuntGameNode(HuntGameNodeTypes.CHASED,[(1,2),(2,2)]),HuntGameNo
 
 GAME_1 = HuntGame(x=34, y=15, width=3, height=3, grid=hunt_section_info["game_grid_3x3"], nodes=GAME_1_NODES, start_nodes=[(0,1)])
 
+GAME_2_NODES = ((HuntGameNode(HuntGameNodeTypes.CHASED,[(2,1),(3,3)]),HuntGameNode(HuntGameNodeTypes.CHASED,[(2,3),(3,3)]),HuntGameNode(HuntGameNodeTypes.GOAL,[]),HuntGameNode(HuntGameNodeTypes.CHASED,[(1,3),(3,2)])),
+                (HuntGameNode(HuntGameNodeTypes.CHASED,[(0,1),(3,3)]),HuntGameNode(HuntGameNodeTypes.CHASED,[(2,0),(2,2)]),HuntGameNode(HuntGameNodeTypes.CHASED,[(0,3),(2,2)]),HuntGameNode(HuntGameNodeTypes.CHASED,[(1,0),(1,1)])),
+                (HuntGameNode(HuntGameNodeTypes.CHASED,[(3,1),(3,2)]),HuntGameNode(HuntGameNodeTypes.CHASED,[(0,0),(3,0)]),HuntGameNode(HuntGameNodeTypes.PURSUER,[]),HuntGameNode(HuntGameNodeTypes.PURSUER,[])),
+                (HuntGameNode(HuntGameNodeTypes.CHASED,[(1,0),(3,3)]),HuntGameNode(HuntGameNodeTypes.CHASED,[(0,0),(0,2)]),HuntGameNode(HuntGameNodeTypes.CHASED,[(2,2),(3,3)]),HuntGameNode(HuntGameNodeTypes.CHASED,[(1,0),(1,2)])))
+
+GAME_2 = HuntGame(x=32, y=13, width=4, height=4, grid=hunt_section_info["game_grid_4x4"], nodes=GAME_2_NODES, start_nodes=[(3,3)])
+
+GAME_3_NODES = ((HuntGameNode(HuntGameNodeTypes.CHASED,[(4,0),(4,4)]),HuntGameNode(HuntGameNodeTypes.CHASED,[(1,0),(0,4)]),HuntGameNode(HuntGameNodeTypes.CHASED,[(2,2),(2,4)]),HuntGameNode(HuntGameNodeTypes.CHASED,[(0,2),(4,0)]),HuntGameNode(HuntGameNodeTypes.CHASED,[(0,3),(4,0)])),
+                (HuntGameNode(HuntGameNodeTypes.CHASED,[(0,4),(2,4)]),HuntGameNode(HuntGameNodeTypes.CHASED,[(3,0),(1,4)]),HuntGameNode(HuntGameNodeTypes.CHASED,[(0,4),(2,1)]),HuntGameNode(HuntGameNodeTypes.PURSUER,[]),HuntGameNode(HuntGameNodeTypes.CHASED,[(3,0),(2,3)])),
+                (HuntGameNode(HuntGameNodeTypes.PURSUER,[]),HuntGameNode(HuntGameNodeTypes.PURSUER,[]),HuntGameNode(HuntGameNodeTypes.CHASED,[(1,2),(0,4)]),HuntGameNode(HuntGameNodeTypes.CHASED,[(0,0),(2,0)]),HuntGameNode(HuntGameNodeTypes.CHASED,[(0,2),(1,2)])),
+                (HuntGameNode(HuntGameNodeTypes.CHASED,[(1,1),(0,4)]),HuntGameNode(HuntGameNodeTypes.CHASED,[(0,3),(4,3)]),HuntGameNode(HuntGameNodeTypes.CHASED,[(4,1),(4,3)]),HuntGameNode(HuntGameNodeTypes.CHASED,[(4,1),(1,3)]),HuntGameNode(HuntGameNodeTypes.CHASED,[])),
+                (HuntGameNode(HuntGameNodeTypes.CHASED,[(3,0),(2,2)]),HuntGameNode(HuntGameNodeTypes.CHASED,[(0,1),(2,2)]),HuntGameNode(HuntGameNodeTypes.CHASED,[(4,1),(1,3)]),HuntGameNode(HuntGameNodeTypes.GOAL,[]),HuntGameNode(HuntGameNodeTypes.CHASED,[(3,1),(3,3)])))
+
+GAME_3 = HuntGame(x=30, y=11, width=5, height=5, grid=hunt_section_info["game_grid_5x5"], nodes=GAME_3_NODES, start_nodes=[(3,0)])
+
 HUNT_GAME_CONSTANTS = HuntGameConstants(x_step= 2, y_step= 2,chased_chr= chr(198), pursuer_chr= chr(238), goal_chr= chr(230))
 
 class HuntSection(Section):
@@ -78,7 +93,7 @@ class HuntSection(Section):
 
         self.seen_instructions = False
         self.current_game = 0
-        self.games = [GAME_1]
+        self.games = [GAME_1, GAME_2, GAME_3]
         self.last_activated_node = None
 
     def update(self):
@@ -215,7 +230,7 @@ class HuntSection(Section):
                         for i in self.get_currently_active_nodes():
                             if (y,x) == i:
                                 self.last_activated_node = (y,x)
-        elif self.state == HuntSectionStates.GAME_RESET:
+        elif self.state == HuntSectionStates.GAME_RESET or self.state == HuntSectionStates.GAME_TRANSITION:
             if self.advisor_dialog.is_talking():
                 self.advisor_dialog.end_talking()
             else:
