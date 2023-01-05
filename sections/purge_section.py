@@ -21,7 +21,7 @@ class PurgeSectionStates(Enum):
 
 class PurgeSection(Section):
     def __init__(self, engine, x: int, y: int, width: int, height: int, name: str = ""):
-        super().__init__(engine, x, y, width, height, "hunt_section.xp", name) 
+        super().__init__(engine, x, y, width, height, "purge_section.xp", name) 
         self.ui = PurgeUI(self, self.tiles["graphic"])     
         self.seen_instructions = False
 
