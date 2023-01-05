@@ -7,7 +7,7 @@ from dialog import Dialog
 from effects.horizontal_wipe_effect import HorizontalWipeDirection
 from game_data.game_structure import chapters
 from sections.section import Section
-from sections.section_layouts import Rect, ImageRect, hunt_section_info
+from sections.section_layouts import Rect, ImageRect, hunt_section_info, land_green
 from ui.hunt_ui import HuntUI
 from typing import NamedTuple
 from image import Image
@@ -71,7 +71,7 @@ GAME_3_NODES = ((HuntGameNode(HuntGameNodeTypes.CHASED,[(4,0),(4,4)]),HuntGameNo
 
 GAME_3 = HuntGame(x=30, y=11, width=5, height=5, grid=hunt_section_info["game_grid_5x5"], nodes=GAME_3_NODES, start_nodes=[(3,0)])
 
-HUNT_GAME_CONSTANTS = HuntGameConstants(x_step= 2, y_step= 2,chased_chr= chr(198), pursuer_chr= chr(238), goal_chr= chr(230))
+HUNT_GAME_CONSTANTS = HuntGameConstants(x_step= 2, y_step= 2,chased_chr= chr(249), pursuer_chr= chr(214), goal_chr= chr(163))
 
 class HuntSection(Section):
     def __init__(self, engine, x: int, y: int, width: int, height: int, name: str = ""):
@@ -176,7 +176,7 @@ class HuntSection(Section):
     def render_normal_nodes(self, console):
         for node_pos in self.get_currently_active_nodes():
             x ,y = self.get_node_coordinates(node_pos)
-            console.print(x,y,HUNT_GAME_CONSTANTS.chased_chr,fg=(255,255,255),bg=(0,0,0))
+            console.print(x,y,HUNT_GAME_CONSTANTS.chased_chr,fg=(255,255,255),bg=land_green)
 
     def render_special_nodes(self,console):
         if self.should_render_special_nodes():
@@ -187,9 +187,9 @@ class HuntSection(Section):
                 node = game.nodes[node_pos[0]][node_pos[1]]
 
                 if node.type == HuntGameNodeTypes.PURSUER:
-                    console.print(x,y,HUNT_GAME_CONSTANTS.pursuer_chr,fg=(255,255,255),bg=(0,0,0))
+                    console.print(x,y,HUNT_GAME_CONSTANTS.pursuer_chr,fg=(255,255,255),bg=land_green)
                 elif node.type == HuntGameNodeTypes.GOAL:
-                    console.print(x,y,HUNT_GAME_CONSTANTS.goal_chr,fg=(255,255,255),bg=(0,0,0))
+                    console.print(x,y,HUNT_GAME_CONSTANTS.goal_chr,fg=(255,255,255),bg=land_green)
 
     def render_advisor(self, console):
         self.draw_image(console, hunt_section_info["advisor_top_eyes_open"].rect, self.advisor_top_animaton.get_current_frame())
@@ -247,6 +247,11 @@ class HuntSection(Section):
 
     def change_state(self, new_state):
         print("Changing to state:", new_state)
+
+        old_state = self.state
+        if old_state == HuntSectionStates.GAME_TRANSITION:
+            self.current_game += 1
+
         self.state = new_state
         self.time_into_state = 0
 
@@ -268,7 +273,6 @@ class HuntSection(Section):
         elif new_state == HuntSectionStates.GAME_TRANSITION:
 
             if self.current_game < len(self.games) - 1:
-                self.current_game += 1
                 self.advisor_dialog.start_talking("Can I get this going so it changes state on dialog end after a click?")
                 self.ui.instructions_open_button.disable()
                 self.advisor_btm_animaton.start()
@@ -316,7 +320,7 @@ class HuntSection(Section):
         return self.state == HuntSectionStates.GAME or self.state == HuntSectionStates.GAME_RESET or self.state == HuntSectionStates.GAME_SETUP or self.state == HuntSectionStates.GAME_TRANSITION or self.state == HuntSectionStates.GAME_TEARDOWN
     
     def should_render_special_nodes(self):
-        return self.state == HuntSectionStates.GAME or self.state == HuntSectionStates.GAME_RESET or self.state == HuntSectionStates.GAME_SETUP or self.state == HuntSectionStates.GAME_TRANSITION or self.state == HuntSectionStates.GAME_TEARDOWN
+        return self.state == HuntSectionStates.GAME or self.state == HuntSectionStates.GAME_RESET or self.state == HuntSectionStates.GAME_TRANSITION or self.state == HuntSectionStates.GAME_TEARDOWN
 
     def get_node_coordinates(self, node):
         game = self.games[self.current_game]

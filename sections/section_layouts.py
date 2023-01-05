@@ -24,6 +24,7 @@ orange = (255,191,0)
 red=(255,0,0)
 
 main_background = (23,18,25)
+land_green = (64,102,63)
 
 class Rect(NamedTuple):
     x : int
