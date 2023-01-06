@@ -9,7 +9,7 @@ class PurgeUI(UI):
         super().__init__(section)
 
     def setup_buttons(self):
-        bs = purge_section_info["quit_button"]
+        bs = purge_section_info["roll_button"]
         self.quit_button = Button(bs.x,bs.y,bs.width,bs.height, click_action=JumpToMenuAction(self.section.engine), h_fg=bs.h_fg)
         self.elements.append(self.quit_button)
 

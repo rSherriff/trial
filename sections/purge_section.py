@@ -7,7 +7,7 @@ from dialog import Dialog
 from effects.horizontal_wipe_effect import HorizontalWipeDirection
 from game_data.game_structure import chapters
 from sections.section import Section
-from sections.section_layouts import Rect, ImageRect
+from sections.section_layouts import Rect, ImageRect, purge_section_info
 from ui.purge_ui import PurgeUI
 from typing import NamedTuple
 from image import Image
@@ -33,7 +33,13 @@ class PurgeSection(Section):
     def render(self, console):
         super().render(console)
 
+        if self.state == PurgeSectionStates.INSTRUCTION:
+            self.render_instructions(console)
 
+        self.draw_button(console, purge_section_info["instructions_open_button"])
+        self.draw_button(console, purge_section_info["pass_button"])
+        self.draw_button(console, purge_section_info["bar_button"])
+        self.draw_button(console, purge_section_info["roll_button"])
         self.render_ui(console)
 
     def open(self):
@@ -68,3 +74,7 @@ class PurgeSection(Section):
     def close_instructions(self):
         self.change_state(self.pre_instructions_state)
         self.pre_instructions_state = None
+
+    def render_instructions(self, console):
+        self.draw_image(console, purge_section_info["instructions_image"].rect, purge_section_info["instructions_image"].image)
+        self.draw_button(console, purge_section_info["instructions_close_button"])

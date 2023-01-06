@@ -163,7 +163,8 @@ class Section:
 
     def draw_button(self, console, bs):
         console.draw_frame(bs.x,bs.y,bs.width,bs.height, decoration=bs.decoration, bg=bs.bg, fg=bs.fg)
-        console.print_box(bs.x+1,bs.y+1,bs.width-2,bs.height-2,string=bs.text,alignment=tcod.CENTER, bg=bs.font_bg, fg=bs.font_fg)
+        mid_y = int(bs.height / 2)
+        console.print_box(bs.x+1,bs.y +mid_y,bs.width-2,bs.height-2,string=bs.text,alignment=tcod.CENTER, bg=bs.font_bg, fg=bs.font_fg)
 
     def draw_image(self, console, rect, image):
         console.tiles_rgb[rect.x: rect.x + rect.width,rect.y: rect.y + rect.height] = image.tiles[0: rect.width, 0: rect.height]["graphic"]

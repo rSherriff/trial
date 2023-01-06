@@ -131,8 +131,10 @@ hunt_section_info = {
 }
 
 purge_section_info = {
-    "quit_button": Button(text="Quit",x=7,y=25,width=6,height=3,bg=main_background,fg=white,font_fg=grey,h_fg=pink,font_bg=white,decoration=button_box_decoration),
-    "instructions_open_button": Button(text="Instructions",x=3,y=22,width=14,height=3,bg=main_background,fg=white,font_fg=grey,h_fg=pink,font_bg=white,decoration=button_box_decoration),
+    "roll_button": Button(text="Roll",x=39,y=25,width=6,height=3,bg=main_background,fg=white,font_fg=grey,h_fg=pink,font_bg=white,decoration=button_box_decoration),
+    "instructions_open_button": Button(text="Instructions",x=2,y=25,width=14,height=3,bg=main_background,fg=white,font_fg=grey,h_fg=pink,font_bg=white,decoration=button_box_decoration),
     "instructions_close_button": Button(text="Close",x=23,y=19,width=7,height=3,bg=black,fg=white,font_fg=grey,h_fg=pink,font_bg=white,decoration=button_box_decoration),
     "instructions_image": ImageRect(Rect(8,3,36,21), Image(0,0,36,21, "images/purge_instructions.xp")),
+    "pass_button": Button(text="Pass",x=26,y=24,width=8,height=5,bg=main_background,fg=white,font_fg=grey,h_fg=pink,font_bg=white,decoration=button_box_decoration),
+    "bar_button": Button(text="Bar",x=19,y=24,width=7,height=5,bg=main_background,fg=white,font_fg=grey,h_fg=pink,font_bg=white,decoration=button_box_decoration),
 }
