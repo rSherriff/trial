@@ -137,4 +137,26 @@ purge_section_info = {
     "instructions_image": ImageRect(Rect(8,3,36,21), Image(0,0,36,21, "images/purge_instructions.xp")),
     "pass_button": Button(text="Pass",x=26,y=24,width=8,height=5,bg=main_background,fg=white,font_fg=grey,h_fg=pink,font_bg=white,decoration=button_box_decoration),
     "bar_button": Button(text="Bar",x=19,y=24,width=7,height=5,bg=main_background,fg=white,font_fg=grey,h_fg=pink,font_bg=white,decoration=button_box_decoration),
+    
+    "pride_dialog_rect": Rect(17,14,19,9),
+    "pride_character": ImageRect(Rect(38,7,9,14), Image(0,0,9,14, "images/pride.xp")),
+    "pride_eyes_open": ImageRect(Rect(42,10,3,1), Image(10,1,3,1, "images/pride.xp")),
+    "pride_eyes_closed": ImageRect(Rect(42,10,3,3), Image(10,2,3,1, "images/pride.xp")),
+    "pride_mouth_closed": ImageRect(Rect(43,13,1,1), Image(10,0,1,1, "images/pride.xp")),
+    "pride_mouth_open": ImageRect(Rect(43,13,1,1), Image(11,0,1,1, "images/pride.xp")),
+    "pride_speech_mark_image": ImageRect(Rect(37,15,1,1),Image(2,0,1,1, "images/misc.xp")),
+
+    "member_dialog_rect": Rect(16,7,19,9),
+    "member_rect": Rect(38,7,9,14),
+    "member_animation_rects":{"eo":Rect(8,10,3,1), "ec": Rect(8,10,3,1), "mo":Rect(9,13,1,1), "mc":Rect(9,13,1,1,)},
+    "member_speech_mark_image": ImageRect(Rect(14,9,1,1),Image(0,0,1,1, "images/misc.xp")),
+    "member_1_character": ImageRect(Rect(4,7,9,14), Image(0,0,9,14, "images/pride.xp")),
+    "member_1_frames":{"eo":Image(10,1,3,1, "images/pride.xp"), "ec": Image(10,2,3,1, "images/pride.xp"), "mo":Image(11,0,1,1, "images/pride.xp"), "mc":Image(10,0,1,1, "images/pride.xp")},
+
+    "dialog_decoration":dialog_box_decoration_filled,
+    "dialog_margin":-1,
+    "dialog_bg": main_background,
+    "dialog_fg": white,
+    "text_color": grey,
+    "start_wait_time": 2.0,
 }
