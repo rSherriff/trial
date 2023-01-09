@@ -147,7 +147,6 @@ purge_section_info = {
     "pride_speech_mark_image": ImageRect(Rect(37,15,1,1),Image(2,0,1,1, "images/misc.xp")),
 
     "member_dialog_rect": Rect(16,7,19,9),
-    "member_rect": Rect(38,7,9,14),
     "member_animation_rects":{"eo":Rect(8,10,3,1), "ec": Rect(8,10,3,1), "mo":Rect(9,13,1,1), "mc":Rect(9,13,1,1,)},
     "member_speech_mark_image": ImageRect(Rect(14,9,1,1),Image(0,0,1,1, "images/misc.xp")),
     "member_1_character": ImageRect(Rect(4,7,9,14), Image(0,0,9,14, "images/pride.xp")),

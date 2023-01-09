@@ -44,6 +44,7 @@ class Dialog():
         self.current_dialog_index = 1
         self.longest_line = 0
         self.current_line = 0
+        self.change_state(DialogState.PENDING)
 
     def end_talking(self):
         self.current_dialog_index = self.total_text_length
