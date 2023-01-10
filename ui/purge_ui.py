@@ -21,6 +21,14 @@ class PurgeUI(UI):
         self.instructions_close_button = Button(bs.x,bs.y,bs.width,bs.height, click_action=GenericAction(self.section.engine, self.section.close_instructions), h_fg=bs.h_fg)
         self.elements.append(self.instructions_close_button)
 
+        bs = purge_section_info["bar_button"]
+        self.bar_button = Button(bs.x,bs.y,bs.width,bs.height, click_action=GenericAction(self.section.engine, self.section.bar_member), h_fg=bs.h_fg)
+        self.elements.append(self.bar_button)
+
+        bs = purge_section_info["pass_button"]
+        self.pass_button = Button(bs.x,bs.y,bs.width,bs.height, click_action=GenericAction(self.section.engine, self.section.pass_member), h_fg=bs.h_fg)
+        self.elements.append(self.pass_button)
+
 """
         bd = [21, 24, 9, 3]  # Button Dimensions
         button_tiles = tiles[bd[0]:bd[0] + bd[2], bd[1]:bd[1] + bd[3]]

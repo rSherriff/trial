@@ -158,4 +158,8 @@ purge_section_info = {
     "dialog_fg": white,
     "text_color": grey,
     "start_wait_time": 2.0,
+
+    "member_dialog_wait_time":2.0,
+    "pride_dialog_wait_time":2.0,
+    "transition_wait_time": 1.0,
 }
