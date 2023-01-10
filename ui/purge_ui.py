@@ -10,8 +10,8 @@ class PurgeUI(UI):
 
     def setup_buttons(self):
         bs = purge_section_info["roll_button"]
-        self.quit_button = Button(bs.x,bs.y,bs.width,bs.height, click_action=JumpToMenuAction(self.section.engine), h_fg=bs.h_fg)
-        self.elements.append(self.quit_button)
+        self.roll_button = Button(bs.x,bs.y,bs.width,bs.height, click_action=JumpToMenuAction(self.section.engine), h_fg=bs.h_fg)
+        self.elements.append(self.roll_button)
 
         bs = purge_section_info["instructions_open_button"]
         self.instructions_open_button = Button(bs.x,bs.y,bs.width,bs.height, click_action=GenericAction(self.section.engine, self.section.open_instructions), h_fg=bs.h_fg)

@@ -260,6 +260,11 @@ class PurgeSection(Section):
             self.start_member_talking(member.dialog)
 
         elif new_state == PurgeSectionStates.GAME:
+
+            if not self.seen_instructions:
+                self.open_instructions()
+                return
+
             self.ui.pass_button.enable()
             self.ui.bar_button.enable()
             self.engine.set_full_screen_effect(self.engine.horizontal_wipe_effect, [HorizontalWipeDirection.RIGHT])
@@ -277,10 +282,14 @@ class PurgeSection(Section):
         self.pre_instructions_state = self.state
         self.seen_instructions = True
         self.ui.instructions_close_button.enable()
+        self.ui.instructions_open_button.disable()
+        self.ui.roll_button.disable()
         self.change_state(PurgeSectionStates.INSTRUCTION)
 
     def close_instructions(self):
         self.ui.instructions_close_button.disable()
+        self.ui.instructions_open_button.enable()
+        self.ui.roll_button.enable()
         self.change_state(self.pre_instructions_state)
         self.pre_instructions_state = None
 
@@ -289,7 +298,7 @@ class PurgeSection(Section):
         self.draw_button(console, purge_section_info["instructions_close_button"])
 
     def should_render_pride(self):
-        return self.state == PurgeSectionStates.GAME_SETUP or self.state == PurgeSectionStates.GAME_MEMBER_DIALOG or self.state == PurgeSectionStates.GAME or self.state == PurgeSectionStates.GAME_TRANSITION or self.state == PurgeSectionStates.GAME_PRIDE_DIALOG
+        return self.state == PurgeSectionStates.GAME_SETUP or self.state == PurgeSectionStates.GAME_MEMBER_DIALOG or self.state == PurgeSectionStates.GAME or self.state == PurgeSectionStates.GAME_TRANSITION or self.state == PurgeSectionStates.GAME_PRIDE_DIALOG or self.state == PurgeSectionStates.INSTRUCTION
 
     def should_render_pride_dialog(self):
         return self.pride_dialog.is_talking() or self.pride_dialog.is_finished()
@@ -299,7 +308,7 @@ class PurgeSection(Section):
         self.pride_mouth_animaton.start()
 
     def should_render_member(self):
-        return self.state == PurgeSectionStates.GAME_MEMBER_DIALOG or self.state == PurgeSectionStates.GAME or self.state == PurgeSectionStates.GAME_PRIDE_DIALOG
+        return self.state == PurgeSectionStates.GAME_MEMBER_DIALOG or self.state == PurgeSectionStates.GAME or self.state == PurgeSectionStates.GAME_PRIDE_DIALOG or self.state == PurgeSectionStates.INSTRUCTION
 
     def should_render_member_dialog(self):
         return self.member_dialog.is_talking() or self.member_dialog.is_finished()
