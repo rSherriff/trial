@@ -149,7 +149,7 @@ class Engine(abc.ABC):
         elif self.is_in_game():
             sections = dict(filter(lambda elem: elem[0] not in self.disabled_sections, self.game_sections.items()))
 
-        sections |= self.misc_sections
+        sections = OrderedDict(list(sections.items()) + list(self.misc_sections.items()))
         return sections.items()
 
     def get_active_ui_sections(self):
@@ -161,7 +161,7 @@ class Engine(abc.ABC):
         elif self.is_in_game():
             sections =  dict(filter(lambda elem: elem[0] not in self.disabled_ui_sections, self.game_sections.items()))
 
-        sections |= (dict(filter(lambda elem: elem[0] not in self.disabled_ui_sections, self.misc_sections.items())))
+        sections = OrderedDict(list(sections.items()) + list((dict(filter(lambda elem: elem[0] not in self.disabled_ui_sections, self.misc_sections.items()))).items()))
         return sections.items()
 
     def enable_section(self, section):

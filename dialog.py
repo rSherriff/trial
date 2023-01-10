@@ -137,7 +137,7 @@ class Dialog():
             else:
                 final_text += t
 
-    def align_justified(self, text: str) -> list[str]:
+    def align_justified(self, text: str):
         
         # Split the text into paragraphs
         text = text.split('\n')
